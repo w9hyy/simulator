@@ -1,12 +1,17 @@
 import time
 import Tkinter as tk
+import tkFont
+import tkMessageBox
+
 import myclass
 import random
 # import Tkinter.ttk as ttk
 import ttk
+
 company = myclass.Company()
 company.print_data()
 
+DAYS=0
 workers_list = []
 list = []
 
@@ -76,6 +81,9 @@ window.title('my game')
 
 name=tk.Label(window ,text='your company', fg='white', bg='#872a2a', pady=5, padx=5)
 name.place(x=0, y=0)
+
+days_label=tk.Label(window ,text='day number: ', fg='white', bg='#872a2a', pady=5, padx=5)
+days_label.place(x=322, y=0)
 
 rating=tk.Label(window, text="your reting: " + str(company.rating), fg='white', bg='#872a2a', pady=5, padx=5)
 rating.place(x=100, y=0)
@@ -257,9 +265,36 @@ def handler_button2():
 button_worker['command']=handler_button
 button_order['command']=handler_button2
 
+def one_day_handler():
+    global DAYS
+    company.do_order()
+    for row in table_order.get_children():
+        table_order.delete(row)
+    index = 1
+    for order in company.order_list:
+        table_order.insert('', index=index, values=(str(index), str(order.complexity), str(order.name), str(order.paid), str(order.rating), str(order.relevance), str(order.term)))
+        index += 1
+
+    for row in table_free_order.get_children():
+        table_free_order.delete(row)
+    index = 1
+    for order in list:
+        table_free_order.insert('', index=index, values=(str(index), str(order.complexity), str(order.name), str(order.paid), str(order.rating), str(order.relevance), str(order.term)))
+        index += 1
+
+    if company.money<=0:
+        tkMessageBox.showerror("end","you bankrupt")
 
 
+    money['text']='your money: ' + str(company.money)
+    days_label['text']='day number: ' + str(DAYS+1)
+    if DAYS %30==0:
+        company.salary_payment()
 
+    DAYS+=1
+button_game=tk.Button(window, width=20, height=2, text='next day', font=tkFont.Font(size=36), command=one_day_handler)
+button_game.place(x=10, y=600)
+# entry_game
 
 
 

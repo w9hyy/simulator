@@ -10,10 +10,10 @@ class Company:
         self.worker_str_list = []
 
     def do_order(self):
-        print("do order")
-        self.order_list[0].term-=1
-        if self.order_list[0].term==0:
-            self.get_paid()
+        for order in self.order_list:
+            order.term-=1
+            if order.term==0:
+                self.get_paid(order)
 
 
     def print_workers(self):
@@ -50,10 +50,13 @@ class Company:
         self.employees_list.pop(number)
 
     def salary_payment(self):
-        self.money -= 10 * self.employees
+        for worker in self.employees_list:
+            self.money-=worker.salary
 
-    def get_paid(self):
-        self.money += self.order_list[0].paid
+
+    def get_paid(self, order):
+        self.money += order.paid
+        self.order_list.remove(order)
 
     def get_order(self, order):
         self.order_list.append(order)
